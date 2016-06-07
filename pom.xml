@@ -1,39 +1,25 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.example</groupId>
-  <artifactId>example-openid-connect-overlay</artifactId>
-  <packaging>pom</packaging>
-  <version>1.1-SNAPSHOT</version>
-  <name>example-openid-connect-overlay</name>
-
-  <properties>
-    <mitreid-version>1.2.2</mitreid-version>
-  </properties>
-
-  <modules>
-    
-    <module>my-openid-connect</module>
-  </modules>
-
-  <dependencies>
-    <dependency>
-      <groupId>org.mitre</groupId>
-      <artifactId>openid-connect-server-webapp</artifactId>
-      <type>war</type>
-      <version>${mitreid-version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.mitre</groupId>
-        <artifactId>openid-connect-parent</artifactId>
-        <type>pom</type>
-        <version>${mitreid-version}</version>
-        <scope>import</scope>
-    </dependency>
-  </dependencies>
-
-  <build>
-    <finalName>my-openid-connect-server</finalName>
-  </build>
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.example</groupId>
+    <artifactId>example-openid-connect-overlay</artifactId>
+    <packaging>pom</packaging>
+    <version>1.1-SNAPSHOT</version>
+    <name>example-openid-connect-overlay</name>
+    <modules>
+        <module>my-openid-connect</module>
+    </modules>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.mitre</groupId>
+                <artifactId>openid-connect-parent</artifactId>
+                <type>pom</type>
+                <scope>import</scope>
+                <version>1.2.2</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <build>
+        <finalName>my-openid-connect-server</finalName>
+    </build>
 </project>
