@@ -1,5 +1,14 @@
 package org.orcid.openid;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.UUID;
+
+import javax.annotation.Resource;
+import javax.sql.DataSource;
+
 import org.mitre.openid.connect.model.DefaultUserInfo;
 import org.mitre.openid.connect.model.UserInfo;
 import org.mitre.openid.connect.service.UserInfoService;
@@ -11,10 +20,24 @@ import org.mitre.openid.connect.service.UserInfoService;
  */
 public class OrcidOpenIdUserInfoService implements UserInfoService {
 
+    @Resource(name = "pooledDataSource")
+    private DataSource dataSource;
+
     @Override
     public UserInfo getByUsername(String username) {
-        // XXX
-        return createDummyUserInfo();
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement profileStatement = connection.prepareStatement("select credit_name from profile where orcid = ?");
+            profileStatement.setString(1, username);
+            ResultSet profileResults = profileStatement.executeQuery();
+            profileResults.next();
+            DefaultUserInfo userInfo = new DefaultUserInfo();
+            userInfo.setId(UUID.randomUUID().getMostSignificantBits());
+            userInfo.setName(profileResults.getString(1));
+            userInfo.setSub(username);
+            return userInfo;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error looking up user info", e);
+        }
     }
 
     @Override
