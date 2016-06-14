@@ -29,10 +29,11 @@ public class OrcidOpenIdUserInfoService implements UserInfoService {
             PreparedStatement profileStatement = connection.prepareStatement("select credit_name from profile where orcid = ?");
             profileStatement.setString(1, username);
             ResultSet profileResults = profileStatement.executeQuery();
-            profileResults.next();
             DefaultUserInfo userInfo = new DefaultUserInfo();
+            if (profileResults.next()) {
+                userInfo.setName(profileResults.getString(1));
+            }
             userInfo.setId(UUID.randomUUID().getMostSignificantBits());
-            userInfo.setName(profileResults.getString(1));
             userInfo.setSub(username);
             return userInfo;
         } catch (SQLException e) {
@@ -42,8 +43,7 @@ public class OrcidOpenIdUserInfoService implements UserInfoService {
 
     @Override
     public UserInfo getByUsernameAndClientId(String username, String clientId) {
-        // XXX
-        return createDummyUserInfo();
+        return getByUsername(username);
     }
 
     @Override
